@@ -1,0 +1,18 @@
+{
+  "name": "my-e2e-bun-container ",
+  "image": "mcr.microsoft.com/devcontainers/universal",
+  "features": {
+
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        // Add any VS Code settings you want
+      },
+      "extensions": [
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  },
+  "postCreateCommand": "npm install -g bun && bun install && touch .env"
+}
