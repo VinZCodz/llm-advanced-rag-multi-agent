@@ -1,0 +1,1 @@
+export const FILE_PATH = "src/knowledgestore/dummyPlaceHolder.pdf";
