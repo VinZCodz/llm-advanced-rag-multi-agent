@@ -1,6 +1,6 @@
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { CharacterTextSplitter } from "@langchain/textsplitters";
-import { vectorStore } from "./vectorStoreClient.ts";
+import { getVectorStore } from "./vectorStoreClient.ts";
 import { FILE_PATH } from './constants.ts';
 
 const ingestDocument = async (filePath: string) => {
@@ -22,7 +22,7 @@ const ingestDocument = async (filePath: string) => {
     });
 
     if (process.env.DO_EMBED_COSTLY_OP == "ENABLED")
-        return await vectorStore.addDocuments(documents);
+        return await (await getVectorStore(process.env.PINECONE_INDEX_GEN_MEDICINE!)).addDocuments(documents);
     else {
         console.warn(`\nFeature flag DO_EMBED_COSTLY_OP is DISABLED, set to ENABLED for actual ingestion Run!`);
         console.warn(`Thus perform: Dummy Ingestion Run`);

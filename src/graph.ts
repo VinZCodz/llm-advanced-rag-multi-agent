@@ -2,6 +2,9 @@ import { StateGraph, MemorySaver, interrupt, Command } from "@langchain/langgrap
 import { StateAnnotation } from "./state.ts";
 import *  as model from "./model.ts"
 import fs from "fs/promises";
+import * as tools from "./tools.ts"
+import { ToolNode } from "@langchain/langgraph/prebuilt";
+import type { AIMessage } from "@langchain/core/messages";
 
 const today = new Date();
 
@@ -49,6 +52,21 @@ const askPatient = (state: typeof StateAnnotation.State) => {
     });
 }
 
+const toolNode = new ToolNode([tools.searchTool, tools.retrieveMedicineKnowledge, tools.retrieveSurgeonKnowledge]);
+
+const diagnosis = (state: typeof StateAnnotation.State) => {
+    const lastMessages = state.messages[state.messages.length - 1] as AIMessage;
+    const toolCalls = lastMessages.tool_calls;
+
+    if (toolCalls?.length) {
+        return "tools"
+    }
+    else
+        return "askPatient"
+}
+
+const augment = (state: typeof StateAnnotation.State) => state.next;
+
 const genMedicinePrompt = { role: "system", content: (await fs.readFile("./src/genMedicinePrompt.txt", "utf-8")) + `\n Todays Date: ${today}` };
 const generalMedicine = async (state: typeof StateAnnotation.State) => {
     const response = await model.genMedicineModel.invoke([genMedicinePrompt, ...state.messages]);
@@ -57,22 +75,20 @@ const generalMedicine = async (state: typeof StateAnnotation.State) => {
 
 const genSurgeonPrompt = { role: "system", content: (await fs.readFile("./src/genSurgeonPrompt.txt", "utf-8")) + `\n Todays Date: ${today}` };
 const generalSurgeon = async (state: typeof StateAnnotation.State) => {
-    console.log(`redirected generalSurgeon`);
-    //const response = await model.genSurgeonModel.invoke([genSurgeonPrompt, ...state.messages]);
-
-    return state;
+    const response = await model.genSurgeonModel.invoke([genSurgeonPrompt, ...state.messages]);
+    return { messages: response, next: "generalSurgeon" }
 };
 
 const graph = new StateGraph(StateAnnotation)
     .addNode("receptionist", receptionist)
     .addNode("generalMedicine", generalMedicine)
     .addNode("generalSurgeon", generalSurgeon)
+    .addNode("tools", toolNode)
     .addEdge("__start__", "receptionist")
     .addConditionalEdges("receptionist", nextResponder)
     .addNode("askPatient", askPatient)
-    .addEdge("generalMedicine", "askPatient")
-
-    //TODO: remove
-    .addEdge("generalSurgeon", "__end__")
+    .addConditionalEdges("generalMedicine", diagnosis)
+    .addConditionalEdges("generalSurgeon", diagnosis)
+    .addConditionalEdges("tools", augment)
 
 export const agent = graph.compile({ checkpointer: new MemorySaver() });
