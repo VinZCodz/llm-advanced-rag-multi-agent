@@ -131,6 +131,5 @@ graph.addConditionalEdges("gradeDocuments", decideToGenerate);
 graph.addEdge("transformQuery", "webSearch");
 graph.addEdge("webSearch", "generate");
 graph.addEdge("generate", '__end__');
-graph._
 
-export const cragAgent = graph.compile().description;
+export const cragAgent = graph.compile();
