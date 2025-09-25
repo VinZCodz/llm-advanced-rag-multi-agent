@@ -11,4 +11,4 @@ export const genMedicineModel = new ChatGroq({
 
 export const genSurgeonModel = new ChatGroq({
     model: process.env.GENSURGEON_MODEL!,
-}).bindTools([tools.searchTool, tools.retrieveSurgeonKnowledge]);
+});

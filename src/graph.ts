@@ -75,8 +75,32 @@ const generalMedicine = async (state: typeof StateAnnotation.State) => {
 
 const genSurgeonPrompt = { role: "system", content: (await fs.readFile("./src/genSurgeonPrompt.txt", "utf-8")) + `\n Todays Date: ${today}` };
 const generalSurgeon = async (state: typeof StateAnnotation.State) => {
+
+    // const inputs = {
+    //     question: "Explain how the different types of agent memory work.",
+    // };
+    // const config = { recursionLimit: 50 };
+    // let finalGeneration;
+    // for await (const output of await app.stream(inputs, config)) {
+    //     for (const [key, value] of Object.entries(output)) {
+    //         console.log(`Node: '${key}'`);
+    //         // Optional: log full state at each node
+    //         // console.log(JSON.stringify(value, null, 2));
+    //         finalGeneration = value;
+    //     }
+    //     console.log("\n---\n");
+    // }
+
+    // // Log the final generation.
+    // console.log(JSON.stringify(finalGeneration, null, 2));
+
+
+
     const response = await model.genSurgeonModel.invoke([genSurgeonPrompt, ...state.messages]);
     return { messages: response, next: "generalSurgeon" }
+
+
+
 };
 
 const graph = new StateGraph(StateAnnotation)

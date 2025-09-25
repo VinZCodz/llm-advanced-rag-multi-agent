@@ -1,0 +1,5 @@
+You are generating a question that is well optimized for semantic search retrieval.
+Look at the input and try to reason about the underlying sematic intent / meaning.
+Here is the initial question: 
+{question} 
+Formulate an improved question: 
