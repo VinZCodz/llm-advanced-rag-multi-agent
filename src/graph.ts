@@ -75,7 +75,6 @@ const generalMedicine = async (state: typeof StateAnnotation.State) => {
 };
 
 const genSurgeonPrompt = { role: "system", content: (await fs.readFile("./src/genSurgeonPrompt.txt", "utf-8")) + `\n Todays Date: ${today}` };
-//TODO: Change messages, add prompt.
 const generalSurgeon = async (state: typeof StateAnnotation.State) => {
     const response = await model.genSurgeonModel.invoke([genSurgeonPrompt, ...state.messages], { response_format: { type: 'json_object' } });
     const responseJson = JSON.parse(response.content as string);
@@ -99,7 +98,7 @@ const graph = new StateGraph(StateAnnotation)
     .addNode("generalSurgeon", generalSurgeon)
     .addNode("tools", toolNode)
     .addEdge("__start__", "receptionist")
-    .addConditionalEdges("receptionist", nextResponder)
+    .addConditionalEdges("receptionist", nextResponder) 
     .addNode("askPatient", askPatient)
     .addConditionalEdges("generalMedicine", diagnosis)
     .addEdge("generalSurgeon", "askPatient")
