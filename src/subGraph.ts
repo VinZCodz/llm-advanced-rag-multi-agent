@@ -40,7 +40,7 @@ const gradeDocuments = async (state: typeof SubStateAnnotation.State) => {
         }
     );
 
-    const prompt = ChatPromptTemplate.fromTemplate((await fs.readFile("./src/graderPrompt.txt", "utf-8")));
+    const prompt = ChatPromptTemplate.fromTemplate((await fs.readFile("./src/prompts/graderPrompt.txt", "utf-8")));
 
     const chain = prompt.pipe(llmWithTool);
 
@@ -97,7 +97,7 @@ const generate = async (state: typeof SubStateAnnotation.State) => {
 const transformQuery = async (state: typeof SubStateAnnotation.State) => {
     console.log("---TRANSFORM QUERY---");
 
-    const prompt = ChatPromptTemplate.fromTemplate((await fs.readFile("./src/transformQueryPrompt.txt", "utf-8")));
+    const prompt = ChatPromptTemplate.fromTemplate((await fs.readFile("./src/prompts/transformQueryPrompt.txt", "utf-8")));
 
     const chain = prompt.pipe(state.model).pipe(new StringOutputParser());
     const betterQuestion = await chain.invoke({ question: state.summary });
