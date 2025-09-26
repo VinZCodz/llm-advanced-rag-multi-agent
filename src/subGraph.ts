@@ -8,12 +8,12 @@ import { formatDocumentsAsString } from "langchain/util/document";
 import { StateGraph } from "@langchain/langgraph";
 import { SubStateAnnotation } from "./subState.ts";
 import fs from "fs/promises";
+import { getVectorStore } from "./ingest/vectorStoreClient.ts";
 
 const retrieve = async (state: typeof SubStateAnnotation.State) => {
     console.log("---RETRIEVE---");
 
-    const retriever = state.vectorStore.asRetriever({ k: 3 });
-
+    const retriever = (await getVectorStore(state.vectorIndex)).asRetriever({ k: 3 });
     const documents = await retriever
         .withConfig({ runName: "FetchRelevantDocuments" })
         .invoke(state.question);
@@ -78,6 +78,8 @@ const decideToGenerate = (state: typeof SubStateAnnotation.State) => {
 
 const generate = async (state: typeof SubStateAnnotation.State) => {
     console.log("---GENERATE---");
+
+    //TODO: Change the prompt.
 
     const prompt = await pull<ChatPromptTemplate>("rlm/rag-prompt");
     const ragChain = prompt.pipe(state.model).pipe(new StringOutputParser());

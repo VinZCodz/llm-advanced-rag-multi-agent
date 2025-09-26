@@ -5,6 +5,7 @@ import fs from "fs/promises";
 import * as tools from "./tools.ts"
 import { ToolNode } from "@langchain/langgraph/prebuilt";
 import type { AIMessage } from "@langchain/core/messages";
+import { cragAgent } from "./subGraph.ts";
 
 const today = new Date();
 
@@ -75,32 +76,20 @@ const generalMedicine = async (state: typeof StateAnnotation.State) => {
 
 const genSurgeonPrompt = { role: "system", content: (await fs.readFile("./src/genSurgeonPrompt.txt", "utf-8")) + `\n Todays Date: ${today}` };
 const generalSurgeon = async (state: typeof StateAnnotation.State) => {
+    const response = await model.genSurgeonModel.invoke([genSurgeonPrompt, ...state.messages], { response_format: { type: 'json_object' } });
+    const responseJson = JSON.parse(response.content as string);
 
-    // const inputs = {
-    //     question: "Explain how the different types of agent memory work.",
-    // };
-    // const config = { recursionLimit: 50 };
-    // let finalGeneration;
-    // for await (const output of await app.stream(inputs, config)) {
-    //     for (const [key, value] of Object.entries(output)) {
-    //         console.log(`Node: '${key}'`);
-    //         // Optional: log full state at each node
-    //         // console.log(JSON.stringify(value, null, 2));
-    //         finalGeneration = value;
-    //     }
-    //     console.log("\n---\n");
-    // }
-
-    // // Log the final generation.
-    // console.log(JSON.stringify(finalGeneration, null, 2));
-
-
-
-    const response = await model.genSurgeonModel.invoke([genSurgeonPrompt, ...state.messages]);
-    return { messages: response, next: "generalSurgeon" }
-
-
-
+    if (responseJson.callSenior) {
+        const subgraphOutput = await cragAgent.invoke({
+            vectorIndex: process.env.PINECONE_INDEX_GEN_SURGEON,
+            model: model.genSurgeonModel,
+            question: responseJson.question
+        });
+        return { messages: subgraphOutput.generation, next: "generalSurgeon" }
+    }
+    else {
+        return { messages: responseJson.message, next: "generalSurgeon" }
+    }
 };
 
 const graph = new StateGraph(StateAnnotation)
@@ -112,7 +101,7 @@ const graph = new StateGraph(StateAnnotation)
     .addConditionalEdges("receptionist", nextResponder)
     .addNode("askPatient", askPatient)
     .addConditionalEdges("generalMedicine", diagnosis)
-    .addConditionalEdges("generalSurgeon", diagnosis)
+    .addEdge("generalSurgeon", "askPatient")
     .addConditionalEdges("tools", augment)
 
 export const agent = graph.compile({ checkpointer: new MemorySaver() });
