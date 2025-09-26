@@ -16,7 +16,7 @@ const retrieve = async (state: typeof SubStateAnnotation.State) => {
     const retriever = (await getVectorStore(state.vectorIndex)).asRetriever({ k: 3 });
     const documents = await retriever
         .withConfig({ runName: "FetchRelevantDocuments" })
-        .invoke(state.question);
+        .invoke(state.summary);
 
     return {
         documents,
@@ -48,7 +48,7 @@ const gradeDocuments = async (state: typeof SubStateAnnotation.State) => {
     for await (const doc of state.documents) {
         const grade = await chain.invoke({
             context: doc.pageContent,
-            question: state.question,
+            question: state.summary,
         });
         if (grade.binaryScore === "yes") {
             console.log("---GRADE: DOCUMENT RELEVANT---");
@@ -86,7 +86,7 @@ const generate = async (state: typeof SubStateAnnotation.State) => {
 
     const generation = await ragChain.invoke({
         context: formatDocumentsAsString(state.documents),
-        question: state.question,
+        question: state.summary,
     });
 
     return {
@@ -100,10 +100,10 @@ const transformQuery = async (state: typeof SubStateAnnotation.State) => {
     const prompt = ChatPromptTemplate.fromTemplate((await fs.readFile("./src/transformQueryPrompt.txt", "utf-8")));
 
     const chain = prompt.pipe(state.model).pipe(new StringOutputParser());
-    const betterQuestion = await chain.invoke({ question: state.question });
+    const betterQuestion = await chain.invoke({ question: state.summary });
 
     return {
-        question: betterQuestion,
+        summary: betterQuestion,
     };
 }
 
@@ -111,7 +111,7 @@ const webSearch = async (state: typeof SubStateAnnotation.State) => {
     console.log("---WEB SEARCH---");
 
     const tool = new TavilySearch();
-    const docs = await tool.invoke({ query: state.question });
+    const docs = await tool.invoke({ query: state.summary });
     const webResults = new Document({ pageContent: docs });
     const newDocuments = state.documents.concat(webResults);
 

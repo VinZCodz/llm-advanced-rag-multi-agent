@@ -75,6 +75,7 @@ const generalMedicine = async (state: typeof StateAnnotation.State) => {
 };
 
 const genSurgeonPrompt = { role: "system", content: (await fs.readFile("./src/genSurgeonPrompt.txt", "utf-8")) + `\n Todays Date: ${today}` };
+//TODO: Change messages, add prompt.
 const generalSurgeon = async (state: typeof StateAnnotation.State) => {
     const response = await model.genSurgeonModel.invoke([genSurgeonPrompt, ...state.messages], { response_format: { type: 'json_object' } });
     const responseJson = JSON.parse(response.content as string);
@@ -83,12 +84,12 @@ const generalSurgeon = async (state: typeof StateAnnotation.State) => {
         const subgraphOutput = await cragAgent.invoke({
             vectorIndex: process.env.PINECONE_INDEX_GEN_SURGEON,
             model: model.genSurgeonModel,
-            question: responseJson.question
+            summary: responseJson.summary
         });
         return { messages: subgraphOutput.generation, next: "generalSurgeon" }
     }
     else {
-        return { messages: responseJson.message, next: "generalSurgeon" }
+        return { messages: responseJson.question, next: "generalSurgeon" }
     }
 };
 

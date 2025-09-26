@@ -6,6 +6,6 @@ export const SubStateAnnotation = Annotation.Root({
     vectorIndex: Annotation<string>,
     model: Annotation<ChatGroq>,
     documents: Annotation<DocInterface.DocumentInterface[]>,
-    question: Annotation<string>,
+    summary: Annotation<string>,
     generation: Annotation<string>,
 });
