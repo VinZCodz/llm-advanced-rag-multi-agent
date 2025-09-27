@@ -3,7 +3,7 @@ Exploring Agentic backend concepts of Agentic-RAG and Corrective-RAG(cRAG) via L
 
 ### What's RAG?
 ---
-Have you ever had a need to cntrl+f your ways to find relevant keywords from the large documents or did lot of internet and information scraping from the knowledge sources and ranked them, filtered them to arrive at final relevance to attain "zen" with context! then you had need! doing this in a AI era seems counter productive and much more if your workflows, automated systems and enterprises are doing them!
+Have you ever had a need to ctrl+f your ways to find relevant keywords from the large documents or did lot of internet and information scraping from the knowledge sources and ranked them, filtered them to arrive at final relevance to attain "zen" with context! then you had need! doing this in a AI era seems counter productive and much more if your workflows, automated systems and enterprises are doing them!
 
 **RAG does it better**: its called Retrieval Augment Generation, where AI is augmented/enriched with domain specific knowledge, so it can be helpful to you in your own ways, in your business and take/make decisions specifically for the need at hand, than being a general profound systems!
 
@@ -108,3 +108,4 @@ Research Paper:
 * https://arxiv.org/pdf/2401.15884
 * https://arxiv.org/pdf/2310.11511
   
+
