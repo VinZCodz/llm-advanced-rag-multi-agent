@@ -99,7 +99,7 @@ typescript, LangGraph Framework for Custom and Sub Graph, Agentic and Corrective
 
 
 ## Thanks & Refrences:
-Thanks for digarms and knowledge:
+Thanks for diagrams and knowledge:
 
 https://blog.langchain.com/agentic-rag-with-langgraph/
 https://huggingface.co/learn/cookbook/en/advanced_rag
@@ -108,4 +108,5 @@ Research Paper:
 * https://arxiv.org/pdf/2401.15884
 * https://arxiv.org/pdf/2310.11511
   
+
 
