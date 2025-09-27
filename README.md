@@ -7,6 +7,10 @@ Have you ever had a need to cntrl+f your ways to find relevant keywords from the
 
 **RAG does it better**: its called Retrieval Augment Generation, where AI is augmented/enriched with domain specific knowledge, so it can be helpful to you in your own ways, in your business and take/make decisions specifically for the need at hand, than being a general profound systems!
 
+<p align="center">
+<img width="700" height="500" alt="image" src="https://github.com/user-attachments/assets/f5e38880-7820-4106-bc71-f57ba8ae61c0" />
+</p>
+
 ### Aren't AI/Agent/Model smart already, why Augment them?
 LLM's are dramatic, set temperature high and see for yourself! 
 
@@ -20,8 +24,18 @@ This drives a compelling need to ground your models with specific information so
 
 How is this any different than Traditional RAG/Vanilla Rag/Basic RAG:
 
+<p align="center">
+<img width="700" height="500" alt="image" src="https://github.com/user-attachments/assets/364692b0-90c9-41c6-8f82-aada7e0f27ec" />
+</p>
+
 * Traditional RAG: in this RAG, the user performers a before hand/upfront retrieval as context and feeds this along with messages. Here the retrieval is more user driven and lacks model autonomy to make retrievals based on its ReAct methodology. 
 > A simpler process where a query retrieves context from a knowledge base once, and then a Large Language Model (LLM) generates a single response. 
+
+<p align="center">
+<img width="700" height="300" alt="image" src="https://github.com/user-attachments/assets/aac156f4-5b6e-41d6-a5ad-e260f84f45f5" />
+</p>
+
+---
 
 ### What's the main differentiator:
 Basic RAG follows a fixed, pre-defined process where it performs one-shot retrieval and typically use LLM/SLM for generation at the end of the chain.
@@ -63,7 +77,7 @@ factuality and citation accuracy for long-form generations relative to these mod
 
 Research Paper: (https://arxiv.org/pdf/2310.11511)
 <p align="center">
-<img width="1000" height="358" alt="image" src="https://github.com/user-attachments/assets/fb64eb43-529e-49aa-95ac-29307426dad6" />
+<img width="785" height="400" alt="image" src="https://github.com/user-attachments/assets/fb64eb43-529e-49aa-95ac-29307426dad6" />
 </p>
 
 ## My Hands-On Implementation:
@@ -76,6 +90,21 @@ In this project,
 * Patients are engaged via Human-in-Loop interrupts.
 * Making use of Retrieval Vector stores, Internet Searching Tools for Query Refinements and Grading system to be relevant.
 
+<p align="center">
+<img width="1909" height="350" alt="Capture" src="https://github.com/user-attachments/assets/da219c69-8939-4d93-b8a8-b1f56be11839" />
+</p>
+
 ### Tech Stack: 
 typescript, LangGraph Framework for Custom and Sub Graph, Agentic and Corrective RAG system, PineCone Vector DB, Multi Agent hand-off via different state annotations.
 
+
+## Thanks & Refrences:
+Thanks for digarms and knowledge:
+
+https://blog.langchain.com/agentic-rag-with-langgraph/
+https://huggingface.co/learn/cookbook/en/advanced_rag
+
+Research Paper: 
+* https://arxiv.org/pdf/2401.15884
+* https://arxiv.org/pdf/2310.11511
+  
